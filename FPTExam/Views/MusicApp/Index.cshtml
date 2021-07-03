@@ -1,0 +1,175 @@
+﻿@model IEnumerable<FPTExam.Models.ArtistModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<style>
+    #myPopup {
+        display: none;
+        position: absolute;
+        top: 50px;
+        right: 50%;
+        background-color: blue;
+        height: 100px;
+        width: 100px;
+    }
+
+    #myExit {
+        position: absolute;
+        right: 0px;
+        text-align: right;
+        color: white;
+        background-color: red;
+    }
+   
+</style>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Num.</th>
+            <th>
+                @Html.DisplayNameFor(model => model.AlbumName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ArtistName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReleaseDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SampleUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                <label>Actions</label>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var i = 1;
+        }
+        @foreach (var dt in Model)
+        {
+            <tr>
+                <td>
+                    @i
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                <img src="@dt.ImageUrl" width="70" height="70">
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => dt.AlbumName)
+
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => dt.ArtistName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => dt.ReleaseDate)
+                </td>
+                <td>
+                    @*<span class="glyphicon glyphicon-play" aria-hidden="true"></span><span class="glyphicon glyphicon-play" aria-hidden="true"></span>*@
+                    @*<span class="glyphicon glyphicon-play"></span>*@
+                    <a href="#" onclick="openpopup('@dt.SampleUrl', '@dt.ImageUrl')" class="glyphicon glyphicon-play"></a>
+
+                    @* <audio controls width="100" height="100">
+                        <source src="@dt.SampleUrl" type="audio/mp3">
+                        <!-- Fallback for older browsers -->
+                        Your browser doesn't support html5 audio
+                    </audio>*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => dt.Price)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@dt.ArtistID">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@dt.ArtistID">Delete</a>
+                </td>
+            </tr>
+            i++;
+        }
+    </tbody>
+</table>
+<div id="myPopup">
+    <a href="#" id="myExit" onclick="closePopup();return false">x</a>
+    Hello There 
+</div>
+<div id="dialog" title="Music">
+    <center>
+        <div class="container" style="width:300px;height:300px;">
+            <div class="row">
+                <div class="col-sm">
+                    <img id="ImageAlbum" src="" width="290" height="290">
+                </div>
+            </div>
+            <div class="row">
+                <audio controls width="100" height="100" id="player">
+                    <source id="mp3_src" src="" type="audio/mp3">
+                    <!-- Fallback for older browsers -->
+                    Your browser doesn't support html5 audio
+                </audio>
+            </div>
+        </div>
+    </center>
+    
+   
+</div>
+
+@section Scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+
+        $(document).ready(function () {
+            $("#dialog").dialog({
+                width:400,
+                height:400,
+                modal: true,
+                resizable: false,
+                close: function () {
+                    var audio = $("#player");      
+                    audio[0].pause();
+                }
+            });
+            $("#dialog").dialog("close");
+        });
+
+        function openpopup(link, img) {
+            debugger;
+            var audio = $("#player");      
+            var imgctrl = $("#ImageAlbum");      
+            imgctrl.attr("src", img);
+            //alert(link);
+            //popup = document.getElementById("myPopup");
+            //popup.style.display = "block";
+            $("#dialog").dialog("open");
+            $("#mp3_src").attr("src", link);
+            audio[0].pause();
+            audio[0].load();//suspends and restores all audio element
+
+            //audio[0].play(); changed based on Sprachprofi's comment below
+            audio[0].oncanplaythrough = audio[0].play();
+
+
+        }
+        function closePopup() {
+            //popup = document.getElementById("myPopup");
+            //popup.style.display = "none";
+            $("#dialog").dialog("close");
+
+        }   
+    </script>
+}

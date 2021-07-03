@@ -1,0 +1,89 @@
+﻿@model FPTExam.Models.ArtistModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Create</h1>
+<h3>Book Entry</h3>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" id="formcreate">
+            <div class="form-group">
+                <label asp-for="ArtistName" class="control-label"></label>
+                <input asp-for="ArtistName" class="form-control" />
+                <input asp-for="ArtistID" type="hidden" class="form-control" />
+                <span asp-validation-for="ArtistName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AlbumName" class="control-label"></label>
+                <input asp-for="AlbumName" class="form-control" />
+                <span asp-validation-for="AlbumName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageUrl" class="control-label"></label>
+                <input asp-for="ImageUrl" class="form-control" />
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReleaseDate" class="control-label"></label>
+                <br />
+                @Html.EditorFor(model => model.ReleaseDate)
+                <br />
+                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" onkeypress="return allowOnlyNumber(event);" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SampleUrl" class="control-label"></label>
+                <input asp-for="SampleUrl" class="form-control" />
+                <span asp-validation-for="SampleUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="button" value="Edit" onclick="alertfirst()" class="btn btn-success" />
+            </div>
+        </form>
+
+        @*<form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger">
+                    <div class="form-group">
+                        <label asp-for="BOOK_NAME" class="control-label"></label>
+                        <input asp-for="BOOK_NAME" class="form-control" />
+                        <span asp-validation-for="BOOK_NAME" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-success" />
+                    </div>
+                </div>
+            </form>*@
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+@section Scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+    function allowOnlyNumber(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+        }
+        function alertfirst() {
+            if (confirm("Are you sure saving data?")) {
+                $('#formcreate').submit();
+            } else {
+                return false;
+            }
+        }
+    </script>
+}
+
+
